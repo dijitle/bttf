@@ -58,57 +58,52 @@ function App() {
       ctx.strokeStyle = "#ffffff";
       ctx.fillStyle = "#ffffff";
 
-      let segThick = 50;
-      let segGap = 5;
-      let segLength = 400;
-      let startX = 25;
-      let startY = 25;
+      let segThick = 100;
+      let segGap = 15;
+      let segLength = 600;
+      let startX = 200;
+      let startY = 100;
+      let skew = -0.1;
 
-      ctx.rect(startX, startY, startX + segLength, startY + 2 * segLength - segThick / 2);
+      ctx.transform(1, 0, skew, 1, startX, startY);
+      ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
       ctx.stroke();
 
-      ctx.rect(startX, startY, startX + segLength, startY + segLength - segThick / 2);
+      ctx.rect(0, 0, segLength + segThick / 2, segLength);
       ctx.stroke();
-
+      ctx.save();
 
       //top
-      ctx.translate(startX, startY)
+      ctx.transform(1, 0, 0, 1, 0, 0)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
 
       //middle
-      ctx.translate(startX, startY + segLength - segThick / 2)
+      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
 
       //bottom
-      ctx.translate(startX, startY + 2 *  segLength - segThick)
+      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
       
       //rightTop
+      ctx.restore();
       ctx.rotate(Math.PI / 2)
-      ctx.translate(startX, -1 * startY - segLength - segThick /2)
+      ctx.transform(1, 0, 0, 1, 0, -1 * segLength - segThick /2)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
       
       //rightBottom
-      ctx.rotate(Math.PI / 2)
-      ctx.translate(startX + segLength - segThick / 2, -1 * startY - segLength - segThick /2)
+      ctx.transform(1, 0, 0, 1, segLength - segThick / 2, 0)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
       
       //leftBottom
-      ctx.rotate(Math.PI / 2)
-      ctx.translate(startX + segLength - segThick / 2, -1 * startY - segThick)
+      ctx.restore();
+      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
       
       //leftTop
-      ctx.rotate(Math.PI / 2)
-      ctx.translate(startX, -1 * startY - segThick)
+      ctx.restore();
+      ctx.transform(1, 0, 0, 1, -segLength + segThick / 2, 0)
       drawSegment(ctx, segThick, segLength, segGap);
-      ctx.resetTransform();
     };
 
     let id = window.requestAnimationFrame(draw);
