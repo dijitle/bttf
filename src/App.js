@@ -8,7 +8,8 @@ function App() {
     w: window.innerWidth,
     h: window.innerHeight
   });
-  const [segValue, setSegValue] = useState(0);
+  const [segNumValue, setSegNumValue] = useState(8);
+  const [segCharValue, setSegCharValue] = useState("a");
 
   useEffect(() => {
     const handleResize = () =>
@@ -21,15 +22,50 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const drawSegment = (ctx, thick, length, gap) => {
-      ctx.lineWidth = 0;
+    const drawVerticalLine = (ctx, x1, y1, x2, y2, thick, gap) => {
       ctx.beginPath();
-      ctx.moveTo(thick / 2 + gap, thick / 2);
-      ctx.lineTo(thick + gap, 0);
-      ctx.lineTo(length - thick / 2 - gap, 0);
-      ctx.lineTo(length - gap, thick / 2)
-      ctx.lineTo(length - thick / 2 - gap, thick);
-      ctx.lineTo(thick + gap, thick)
+      ctx.moveTo(x1, y1 + gap);
+      ctx.lineTo(x1 + thick / 2, y1 + thick / 2 + gap);
+      ctx.lineTo(x2 + thick / 2, y2 - thick / 2 - gap);
+      ctx.lineTo(x2, y2 - gap)
+      ctx.lineTo(x2 - thick / 2, y2 - thick / 2 - gap);
+      ctx.lineTo(x1 - thick / 2, y1 + thick / 2 + gap)
+      ctx.closePath();
+      ctx.fill()
+    }
+
+    const drawHorizontalLine = (ctx, x1, y1, x2, y2, thick, gap) => {
+      ctx.beginPath();
+      ctx.moveTo(x1 + gap, y1);
+      ctx.lineTo(x1 + thick / 2 + gap, y1 - thick / 2);
+      ctx.lineTo(x2 - thick / 2 - gap, y2 - thick / 2);
+      ctx.lineTo(x2 - gap, y2)
+      ctx.lineTo(x2 - thick / 2 - gap, y2 + thick / 2);
+      ctx.lineTo(x1 + thick / 2 + gap, y1 + thick /2)
+      ctx.closePath();
+      ctx.fill()
+    }
+
+    const drawDiagonalDownLine = (ctx, x1, y1, x2, y2, thick, gap) => {
+      ctx.beginPath();
+      ctx.moveTo(x1 + gap, y1 + gap);
+      ctx.lineTo(x1 + thick / Math.sqrt(2) + gap, y1 + gap);
+      ctx.lineTo(x2 - gap, y2 - thick / Math.sqrt(2) - gap);
+      ctx.lineTo(x2 - gap, y2 - gap)
+      ctx.lineTo(x2 - thick / Math.sqrt(2) - gap, y2 - gap);
+      ctx.lineTo(x1 + gap, y1 + thick / Math.sqrt(2) + gap)
+      ctx.closePath();
+      ctx.fill()
+    }
+
+    const drawDiagonalUpLine = (ctx, x1, y1, x2, y2, thick, gap) => {
+      ctx.beginPath();
+      ctx.moveTo(x1 + gap, y1 - gap);
+      ctx.lineTo(x1 + gap, y1 - thick / Math.sqrt(2) - gap);
+      ctx.lineTo(x2 - thick / Math.sqrt(2) - gap, y2 + gap);
+      ctx.lineTo(x2 - gap, y2 + gap)
+      ctx.lineTo(x2 - gap, y2 + thick / Math.sqrt(2) + gap);
+      ctx.lineTo(x1 + thick / Math.sqrt(2) + gap, y1 - gap)
       ctx.closePath();
       ctx.fill()
     }
@@ -59,159 +95,140 @@ function App() {
       ctx.globalAlpha = dim;
       
       let segThick = 100;
-      let segGap = 1;
+      let segGap = 10;
       let segLength = 600;
-      let skew = 0;
+      let skew = -0.1;
 
 
       ctx.fillStyle = "#ff0000";
       ctx.transform(1, 0, skew, 1, 100, 100);
-      ctx.save();
 
-      ctx.strokeStyle = "#ffffff"
-      ctx.lineWidth = 5;
-      ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
-      ctx.stroke();
-
-      ctx.rect(0, 0, segLength + segThick / 2, segLength);
-      ctx.stroke();
+      let top = segThick / 2;
+      let left = segThick / 2;
+      let right = segLength - segThick / 2;
+      let center = segLength / 2;
+      let middle = segLength
+      let bottom = 2 * segLength - segThick / 2;
 
       //top
-      ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segNumValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, top, right, top, segThick, segGap);
 
       //middle
-      ctx.globalAlpha = [2, 3, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(0, segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [2, 3, 4, 5, 6, 8, 9].includes(segNumValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, middle, right, middle, segThick, segGap);
 
       //bottom
-      ctx.globalAlpha = [0, 2, 3, 5, 6, 8].includes(segValue) ? 1 : dim;
-      ctx.translate(0, segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 8].includes(segNumValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, bottom, right, bottom, segThick, segGap);
       
       //rightTop
-      ctx.restore();
-      ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.rotate(Math.PI / 2)
-      ctx.translate(0, -segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segNumValue) ? 1 : dim;
+      drawVerticalLine(ctx, right, top, right, middle, segThick, segGap);
       
       //rightBottom
-      ctx.globalAlpha = [0, 1, 3, 4, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(segLength - segThick / 2, 0)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 1, 3, 4, 5, 6, 7, 8, 9].includes(segNumValue) ? 1 : dim;
+      drawVerticalLine(ctx, right, middle, right, bottom, segThick, segGap);
       
       //leftBottom
-      ctx.restore();
-      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
-      ctx.translate( 0, segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 2, 6, 8].includes(segNumValue) ? 1 : dim;
+      drawVerticalLine(ctx, left, middle, left, bottom, segThick, segGap);
       
       //leftTop
-      ctx.restore();
-      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate( -segLength + segThick / 2, 0)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segNumValue) ? 1 : dim;
+      drawVerticalLine(ctx, left, top, left, middle, segThick, segGap);
 
 
       ctx.globalAlpha = dim;
-      ctx.fillStyle = "#00ff00";
+      ctx.fillStyle = "#0000ff";
       ctx.resetTransform();
 
       ctx.transform(1, 0, skew, 1, 800, 100);
-      ctx.save();
-
-      ctx.beginPath();
-      ctx.strokeStyle = "#ffffff"
-      ctx.lineWidth = 5;
-      ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
-      ctx.stroke();
-
-      ctx.rect(0, 0, segLength / 2 + segThick / 4, 2 * segLength);
-      ctx.stroke();
-
-      ctx.rect(0, 0, segLength + segThick / 2, segLength);
-      ctx.stroke();
       
+      ctx.globalAlpha = 1;
+     
+      ctx.fillStyle = "#00ff00"
+
+      //northwest
+      ctx.globalAlpha = "MNXx".includes(segCharValue) ? 1 : dim;
+      drawDiagonalDownLine(ctx, left, top, center, middle, segThick, segGap);
+
+      //northeast
+      ctx.globalAlpha = "01KMVXZkx".includes(segCharValue) ? 1 : dim;
+      drawDiagonalUpLine(ctx, center, middle, right, top, segThick, segGap);
+
+      //southeast
+      ctx.globalAlpha = "5KNQRWXkwx".includes(segCharValue) ? 1 : dim;
+      drawDiagonalDownLine(ctx, center, middle, right, bottom, segThick, segGap);
+
+      //southwest
+      ctx.globalAlpha = "0VWXZevwxz".includes(segCharValue) ? 1 : dim;
+      drawDiagonalUpLine(ctx, left, bottom, center, middle, segThick, segGap);
+
+      ctx.globalAlpha = dim;
+
       //top left
-      ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "02356789ABCDEFGIOPQRSTZgpqs".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, top, center, top, segThick, segGap);
 
       //top right
-      ctx.restore();
-      ctx.translate(segLength / 2 - segThick / 4, 0)
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "02356789ABCDEFGIOPQRSTZf".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, center, top, right, top, segThick, segGap);
 
       //middle left
-      ctx.restore();
-      ctx.globalAlpha = [2, 3, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(-segLength / 2 + segThick / 4, segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "245689AEFHKPRSYabcefghmnopqrstz".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, middle, center, middle, segThick, segGap);
 
       //middle right
-      ctx.restore();
-      ctx.translate(segLength / 2 - segThick / 4, 0)
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "234689ABGHPRSYdfmy".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, center, middle, right, middle, segThick, segGap);
 
       //bottom left
-      ctx.globalAlpha = [0, 2, 3, 5, 6, 8].includes(segValue) ? 1 : dim;
-      ctx.translate(-segLength / 2 + segThick / 4, segLength - segThick / 2)
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "035689BCDEGIJLOQSUYZabcegjostuz".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, left, bottom, center, bottom, segThick, segGap);
 
       //bottom right
-      ctx.restore();
-      ctx.translate(segLength / 2 - segThick / 4, 0)
-      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      ctx.globalAlpha = "0235689BCDEGIJLOQSUYZady".includes(segCharValue) ? 1 : dim;
+      drawHorizontalLine(ctx, center, bottom, right, bottom, segThick, segGap);
       
       //rightTop
-      ctx.restore();
-      ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.rotate(Math.PI / 2)
-      ctx.translate(-2 * segLength + segThick, -segLength / 2 - segThick + segThick / 4)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = "01234789ABDHJMNOPQRUWYdy".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, right, top, right, middle, segThick, segGap);
       
       //rightBottom
-      ctx.globalAlpha = [0, 1, 3, 4, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(segLength - segThick / 2, 0)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = "01346789ABDGHJMNOQSUWYdmwy".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, right, middle, right, bottom, segThick, segGap);
       
-      //middleBottom
-      ctx.restore();
-      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(0, segLength / 2 - segThick / 4)
-      drawSegment(ctx, segThick, segLength, segGap);
-
-      //middleTop
-      ctx.restore();
-      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
-      ctx.translate(-segLength + segThick / 2, 0)
-      drawSegment(ctx, segThick, segLength, segGap);
+      //leftBottom
+      ctx.globalAlpha = "0268ACEFGHJKLMNOPQRUVWabcehjlmnoprtuvw".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, left, middle, left, bottom, segThick, segGap);
       
       //leftTop
-      ctx.restore();
-      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
-      ctx.translate(0, segLength / 2 - segThick / 4)
-      drawSegment(ctx, segThick, segLength, segGap);
+      ctx.globalAlpha = "045689ACEFGHKLMNOPQRSUVWYbghlpqst".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, left, top, left, middle, segThick, segGap);
 
-      //leftBottom
-      ctx.restore();
-      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
-      ctx.translate(segLength - segThick / 2, 0)
-      drawSegment(ctx, segThick, segLength, segGap);
-     
+      //centerTop
+      ctx.globalAlpha = "BDITfgjkpqy".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, center, top, center, middle, segThick, segGap);
+      
+      //centerBottom
+      ctx.globalAlpha = "BDITabdfghijkmnoqsu".includes(segCharValue) ? 1 : dim;
+      drawVerticalLine(ctx, center, middle, center, bottom, segThick, segGap);
+      
     };
 
     let id = window.requestAnimationFrame(draw);
     return () => window.cancelAnimationFrame(id);
   }, [
     winSize,
-    segValue
+    segNumValue,
+    segCharValue
   ]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSegValue((segValue + 1) % 10);
+      setSegNumValue((segNumValue + 1) % 10);
+      setSegCharValue(segCharValue === "Z" ? "a" : segCharValue === "z" ? "A" : String.fromCharCode(segCharValue?.charCodeAt(0) + 1))
     }, 1000);
     return () => clearTimeout(timer);
   });
