@@ -8,6 +8,7 @@ function App() {
     w: window.innerWidth,
     h: window.innerHeight
   });
+  const [segValue, setSegValue] = useState(0);
 
   useEffect(() => {
     const handleResize = () =>
@@ -52,18 +53,18 @@ function App() {
 
       var w = canvas.width;
 
-
       ctx.clearRect(0, 0, w, w);
 
-      ctx.strokeStyle = "#ffffff";
       ctx.fillStyle = "#ffffff";
+      let dim = 0.05;
+      ctx.globalAlpha = dim;
 
       let segThick = 100;
       let segGap = 15;
       let segLength = 600;
       let startX = 200;
       let startY = 100;
-      let skew = -0.1;
+      let skew = 0;
 
       ctx.transform(1, 0, skew, 1, startX, startY);
       ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
@@ -74,48 +75,63 @@ function App() {
       ctx.save();
 
       //top
-      ctx.transform(1, 0, 0, 1, 0, 0)
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
       drawSegment(ctx, segThick, segLength, segGap);
 
       //middle
-      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
+      ctx.globalAlpha = [2, 3, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
 
       //bottom
-      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 8].includes(segValue) ? 1 : dim;
+      ctx.translate(0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
       
       //rightTop
       ctx.restore();
+      ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segValue) ? 1 : dim;
       ctx.rotate(Math.PI / 2)
-      ctx.transform(1, 0, 0, 1, 0, -1 * segLength - segThick /2)
+      ctx.translate(0, -1 * segLength - segThick /2)
       drawSegment(ctx, segThick, segLength, segGap);
       
       //rightBottom
-      ctx.transform(1, 0, 0, 1, segLength - segThick / 2, 0)
+      ctx.globalAlpha = [0, 1, 3, 4, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(segLength - segThick / 2, 0)
       drawSegment(ctx, segThick, segLength, segGap);
       
       //leftBottom
       ctx.restore();
-      ctx.transform(1, 0, 0, 1, 0, segLength - segThick / 2)
+      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
+      ctx.translate( 0, segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
       
       //leftTop
       ctx.restore();
-      ctx.transform(1, 0, 0, 1, -segLength + segThick / 2, 0)
+      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate( -segLength + segThick / 2, 0)
       drawSegment(ctx, segThick, segLength, segGap);
     };
 
     let id = window.requestAnimationFrame(draw);
     return () => window.cancelAnimationFrame(id);
   }, [
-    winSize
+    winSize,
+    segValue
   ]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSegValue((segValue + 1) % 10);
+    }, 1000);
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div className="App vh-100 vw-100">
       <div className="container-fluid p-0">
         <canvas id="timeCircuits"></canvas>
+        
       </div>
     </div>
   );
