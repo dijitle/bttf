@@ -94,9 +94,9 @@ function App() {
       let dim = 0.08;
       ctx.globalAlpha = dim;
       
-      let segThick = 100;
-      let segGap = 10;
-      let segLength = 600;
+      let segThick = 25;
+      let segGap = 4;
+      let segLength = 200;
       let skew = -0.1;
 
 
