@@ -55,24 +55,26 @@ function App() {
 
       ctx.clearRect(0, 0, w, w);
 
-      ctx.fillStyle = "#ffffff";
-      let dim = 0.05;
+      let dim = 0.08;
       ctx.globalAlpha = dim;
-
+      
       let segThick = 100;
-      let segGap = 15;
+      let segGap = 1;
       let segLength = 600;
-      let startX = 200;
-      let startY = 100;
       let skew = 0;
 
-      ctx.transform(1, 0, skew, 1, startX, startY);
+
+      ctx.fillStyle = "#ff0000";
+      ctx.transform(1, 0, skew, 1, 100, 100);
+      ctx.save();
+
+      ctx.strokeStyle = "#ffffff"
+      ctx.lineWidth = 5;
       ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
       ctx.stroke();
 
       ctx.rect(0, 0, segLength + segThick / 2, segLength);
       ctx.stroke();
-      ctx.save();
 
       //top
       ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
@@ -92,7 +94,7 @@ function App() {
       ctx.restore();
       ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segValue) ? 1 : dim;
       ctx.rotate(Math.PI / 2)
-      ctx.translate(0, -1 * segLength - segThick /2)
+      ctx.translate(0, -segLength - segThick / 2)
       drawSegment(ctx, segThick, segLength, segGap);
       
       //rightBottom
@@ -111,6 +113,93 @@ function App() {
       ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
       ctx.translate( -segLength + segThick / 2, 0)
       drawSegment(ctx, segThick, segLength, segGap);
+
+
+      ctx.globalAlpha = dim;
+      ctx.fillStyle = "#00ff00";
+      ctx.resetTransform();
+
+      ctx.transform(1, 0, skew, 1, 800, 100);
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#ffffff"
+      ctx.lineWidth = 5;
+      ctx.rect(0, 0, segLength + segThick / 2, 2 * segLength);
+      ctx.stroke();
+
+      ctx.rect(0, 0, segLength / 2 + segThick / 4, 2 * segLength);
+      ctx.stroke();
+
+      ctx.rect(0, 0, segLength + segThick / 2, segLength);
+      ctx.stroke();
+      
+      //top left
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+
+      //top right
+      ctx.restore();
+      ctx.translate(segLength / 2 - segThick / 4, 0)
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+
+      //middle left
+      ctx.restore();
+      ctx.globalAlpha = [2, 3, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(-segLength / 2 + segThick / 4, segLength - segThick / 2)
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+
+      //middle right
+      ctx.restore();
+      ctx.translate(segLength / 2 - segThick / 4, 0)
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+
+      //bottom left
+      ctx.globalAlpha = [0, 2, 3, 5, 6, 8].includes(segValue) ? 1 : dim;
+      ctx.translate(-segLength / 2 + segThick / 4, segLength - segThick / 2)
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+
+      //bottom right
+      ctx.restore();
+      ctx.translate(segLength / 2 - segThick / 4, 0)
+      drawSegment(ctx, segThick, segLength / 2 + segThick / 4, segGap);
+      
+      //rightTop
+      ctx.restore();
+      ctx.globalAlpha = [0, 1, 2, 3, 4, 7, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.rotate(Math.PI / 2)
+      ctx.translate(-2 * segLength + segThick, -segLength / 2 - segThick + segThick / 4)
+      drawSegment(ctx, segThick, segLength, segGap);
+      
+      //rightBottom
+      ctx.globalAlpha = [0, 1, 3, 4, 5, 6, 7, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(segLength - segThick / 2, 0)
+      drawSegment(ctx, segThick, segLength, segGap);
+      
+      //middleBottom
+      ctx.restore();
+      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(0, segLength / 2 - segThick / 4)
+      drawSegment(ctx, segThick, segLength, segGap);
+
+      //middleTop
+      ctx.restore();
+      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
+      ctx.translate(-segLength + segThick / 2, 0)
+      drawSegment(ctx, segThick, segLength, segGap);
+      
+      //leftTop
+      ctx.restore();
+      ctx.globalAlpha = [0, 4, 5, 6, 8, 9].includes(segValue) ? 1 : dim;
+      ctx.translate(0, segLength / 2 - segThick / 4)
+      drawSegment(ctx, segThick, segLength, segGap);
+
+      //leftBottom
+      ctx.restore();
+      ctx.globalAlpha = [0, 2, 6, 8].includes(segValue) ? 1 : dim;
+      ctx.translate(segLength - segThick / 2, 0)
+      drawSegment(ctx, segThick, segLength, segGap);
+     
     };
 
     let id = window.requestAnimationFrame(draw);
