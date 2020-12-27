@@ -88,11 +88,13 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     ctx.fillStyle = "#ffffff";
     ctx.fillText(name, width / 2, y + height  - nameFontSize - 5)
 
+    ctx.transform(1, 0, segSkew, 1, 0.1 * y + segThick * 2, 0)
+    
     ctx.fillStyle = color;
     draw16SegmentDisplay(ctx, segSeparation, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, "O")
     draw16SegmentDisplay(ctx, segSeparation + segWidth + segThick, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, "C")
     draw16SegmentDisplay(ctx, segSeparation + (segWidth + segThick) * 2, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, "T")
-
+    
     draw7SegmentDisplay(ctx, segSeparation * 2 + (segWidth + segThick)  * 3, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getDate().toString().padStart(2, "0")[0]);
     draw7SegmentDisplay(ctx, segSeparation * 2 + (segWidth + segThick)  * 4, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getDate().toString().padStart(2, "0")[1]);
     
@@ -102,10 +104,12 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 7, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[2]);
     draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 8, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[3]);
     
-
+    
     draw7SegmentDisplay(ctx, segSeparation * 4 + (segWidth + segThick) * 10, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getHours().toString().padStart(2, "0")[0]);
     draw7SegmentDisplay(ctx, segSeparation * 4 + (segWidth + segThick) * 11, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getHours().toString().padStart(2, "0")[1]);
     
     draw7SegmentDisplay(ctx, segSeparation * 6 + (segWidth + segThick) * 12, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getMinutes().toString().padStart(2, "0")[0]);
     draw7SegmentDisplay(ctx, segSeparation * 6 + (segWidth + segThick) * 13, y + labelFontSize + 25 + segThick * 2, segWidth, segHeight, segThick, segGap, value.getMinutes().toString().padStart(2, "0")[1]);
+    
+    ctx.resetTransform();
 }
