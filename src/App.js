@@ -9,8 +9,9 @@ function App() {
     w: window.innerWidth,
     h: window.innerHeight
   });
-  const [segNumValue, setSegNumValue] = useState(8);
-  const [segCharValue, setSegCharValue] = useState("a");
+  const [destinationTime, setDestinationTime] = useState(new Date(1985, 9, 26, 1, 21));
+  const [presentTime, setPresentTime] = useState(new Date());
+  const [lastTime, setLastTime] = useState(new Date(1985, 9, 26, 1, 20));
 
   useEffect(() => {
     const handleResize = () =>
@@ -44,11 +45,11 @@ function App() {
 
       ctx.clearRect(0, 0, w, w);
 
-      drawTimePod(ctx, w, 0, "#ff0000", "DESTINATION TIME", new Date(1985, 10, 26, 1, 21))
+      drawTimePod(ctx, w, 0, "#ff0000", "DESTINATION TIME", destinationTime)
 
-      drawTimePod(ctx, w, w / 4 + 10, "#00ff00", "PRESENT TIME", new Date(1985, 10, 26, 1, 22))
+      drawTimePod(ctx, w, w / 4 + 10, "#00ff00", "PRESENT TIME", presentTime)
 
-      drawTimePod(ctx, w, w / 2 + 20, "#ffff00", "LAST TIME DEPARTED", new Date(1985, 10, 26, 1, 20))
+      drawTimePod(ctx, w, w / 2 + 20, "#ffff00", "LAST TIME DEPARTED", lastTime)
 
     };
 
@@ -56,17 +57,17 @@ function App() {
     return () => window.cancelAnimationFrame(id);
   }, [
     winSize,
-    segNumValue,
-    segCharValue
+    destinationTime,
+    presentTime,
+    lastTime
   ]);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setSegNumValue((segNumValue + 1) % 10);
-  //     setSegCharValue(segCharValue === "Z" ? "a" : segCharValue === "z" ? "A" : String.fromCharCode(segCharValue?.charCodeAt(0) + 1))
-  //   }, 1000);
-  //   return () => clearTimeout(timer);
-  // });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPresentTime(new Date())
+    }, 1000);
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div className="App vh-100 vw-100">
