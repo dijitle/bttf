@@ -2,45 +2,100 @@ import {draw7SegmentDisplay, draw16SegmentDisplay} from "./SegmentDisplay"
 
 export function drawTimePod(ctx, width, y, color, name, value) {
 
-    let segThick = 15;
-    let segGap = 4;
-    let segWidth = 100;
-    let segHeight = 200;
+    let segThick = width * .01;
+    let segGap = width * .001;
+    let segWidth = width * .048;
+    let segHeight = width * .085;
     let segSkew = -0.1;
+    let segSeparation = width * .025
 
+    let height = width / 4
 
-    ctx.fillStyle = "#888888";
-    ctx.fillRect(0, y, width, width / 3);
+    let labelFontSize = width * 0.023;
+    let nameFontSize = width * 0.042;
 
-    ctx.fillStyle = "#ff0000";
-    ctx.fillRect(25, y + 5, width / 10, width / 30);
-
-    ctx.fillRect(125, y + 5, width / 10, width / 30);
-
-    ctx.fillStyle = "#ffffff";
     ctx.textAlign="center"; 
     ctx.textBaseline = "top";
-    ctx.font = "Bold 75px Courier"
-    ctx.fillText("MONTH", 225, 25)
+    ctx.font = "Bold " +  labelFontSize + "px Verdana"
 
+    //background
+    ctx.fillStyle = "#888888";
+    ctx.fillRect(0, y, width, height);
+
+    //month label
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(segSeparation, y + 5, (segWidth + segThick)  * 3, labelFontSize + 10);
 
     ctx.fillStyle = "#000000";
-    let textWidth = ctx.measureText(name).width;
-    ctx.fillRect(width / 2 - textWidth / 2 - 20, width / 3  - 85, textWidth + 40, 80);
+    ctx.fillRect(segSeparation - segThick, y + labelFontSize + 25 + segThick, (segWidth + segThick)  * 3 + segThick * 2, segHeight + segThick * 2);
 
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(name, width / 2, width / 3  - 85)
+    ctx.fillText("MONTH", segSeparation + (segWidth + segThick)  * 3 / 2, y + 15)
 
-    ctx.transform(1, 0, segSkew, 1, 0, 0);
+    //day label
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(segSeparation * 2 + (segWidth + segThick)  * 3, y + 5, (segWidth + segThick)  * 2, labelFontSize + 10);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("DAY", segSeparation * 2 + (segWidth + segThick)  * 4, y + 15)
+
+    //year label
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(segSeparation * 3 + (segWidth + segThick)  * 6, y + 5, (segWidth + segThick)  * 2, labelFontSize + 10);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("YEAR", segSeparation * 3 + (segWidth + segThick)  * 7, y + 15)
+
+    //hour label
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(segSeparation * 4 + (segWidth + segThick)  * 10, y + 5, (segWidth + segThick)  * 2, labelFontSize + 10);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("HOUR", segSeparation * 4 + (segWidth + segThick)  * 11, y + 15)
+
+    //min label
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(segSeparation * 6 + (segWidth + segThick)  * 12, y + 5, (segWidth + segThick)  * 2, labelFontSize + 10);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("MIN", segSeparation * 6 + (segWidth + segThick)  * 13, y + 15)
+
+    //Time label
+    ctx.fillStyle = "#000000";
+    ctx.font = "Bold " +  nameFontSize + "px Verdana"
+    let textWidth = ctx.measureText(name).width;
+    ctx.fillRect(width / 2 - textWidth / 2 - 20, y + height - nameFontSize - 10, textWidth + 40, nameFontSize + 5);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(name, width / 2, y + height  - nameFontSize - 5)
+
+
+
+
+    //ctx.transform(1, 0, segSkew, 1, 0, 0);
     
     ctx.fillStyle = color;
+    draw16SegmentDisplay(ctx, segSeparation, y + 100, segWidth, segHeight, segThick, segGap, "O")
+    draw16SegmentDisplay(ctx, segSeparation + segWidth + segThick, y + 100, segWidth, segHeight, segThick, segGap, "C")
+    draw16SegmentDisplay(ctx, segSeparation + (segWidth + segThick) * 2, y + 100, segWidth, segHeight, segThick, segGap, "T")
+
+    draw7SegmentDisplay(ctx, segSeparation * 2 + (segWidth + segThick)  * 3, y + 100, segWidth, segHeight, segThick, segGap, value.getDate().toString().padStart(2, "0")[0]);
+    draw7SegmentDisplay(ctx, segSeparation * 2 + (segWidth + segThick)  * 4, y + 100, segWidth, segHeight, segThick, segGap, value.getDate().toString().padStart(2, "0")[1]);
     
-    draw7SegmentDisplay(ctx, 50, 200, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[0]);
-    draw7SegmentDisplay(ctx, 175, 200, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[1]);
-    draw7SegmentDisplay(ctx, 300, 200, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[2]);
-    draw7SegmentDisplay(ctx, 425, 200, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[3]);
     
-    draw16SegmentDisplay(ctx, 50, 520, segWidth, segHeight, segThick, segGap, "A")
+    draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 5, y + 100, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[0]);
+    draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 6, y + 100, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[1]);
+    draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 7, y + 100, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[2]);
+    draw7SegmentDisplay(ctx, segSeparation * 3 + (segWidth + segThick)  * 8, y + 100, segWidth, segHeight, segThick, segGap, value.getFullYear().toString()[3]);
+    
+
+    draw7SegmentDisplay(ctx, segSeparation * 5 + (segWidth + segThick) * 10, y + 100, segWidth, segHeight, segThick, segGap, value.getHours().toString().padStart(2, "0")[0]);
+    draw7SegmentDisplay(ctx, segSeparation * 5 + (segWidth + segThick) * 11, y + 100, segWidth, segHeight, segThick, segGap, value.getHours().toString().padStart(2, "0")[1]);
+    
+    draw7SegmentDisplay(ctx, segSeparation * 7 + (segWidth + segThick) * 12, y + 100, segWidth, segHeight, segThick, segGap, value.getMinutes().toString().padStart(2, "0")[0]);
+    draw7SegmentDisplay(ctx, segSeparation * 7 + (segWidth + segThick) * 13, y + 100, segWidth, segHeight, segThick, segGap, value.getMinutes().toString().padStart(2, "0")[1]);
+    
+    ctx.resetTransform();
 
 
     

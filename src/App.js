@@ -44,7 +44,11 @@ function App() {
 
       ctx.clearRect(0, 0, w, w);
 
-      drawTimePod(ctx, w, 0, "#ff0000", "PRESENT TIME", new Date())
+      drawTimePod(ctx, w, 0, "#ff0000", "DESTINATION TIME", new Date(1985, 10, 26, 1, 21))
+
+      drawTimePod(ctx, w, w / 4 + 10, "#00ff00", "DESTINATION TIME", new Date(1985, 10, 26, 1, 22))
+
+      drawTimePod(ctx, w, w / 2 + 20, "#ffff00", "LAST TIME DEPARTED", new Date(1985, 10, 26, 1, 20))
 
     };
 
