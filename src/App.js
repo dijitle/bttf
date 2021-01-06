@@ -47,9 +47,9 @@ function App() {
 
       drawTimePod(ctx, w, 0, "#ff0000", "DESTINATION TIME", destinationTime)
 
-      drawTimePod(ctx, w, w / 4 + 10, "#00ff00", "PRESENT TIME", presentTime)
+      drawTimePod(ctx, w, w / 4, "#00ff00", "PRESENT TIME", presentTime)
 
-      drawTimePod(ctx, w, w / 2 + 20, "#ffff00", "LAST TIME DEPARTED", lastTime)
+      drawTimePod(ctx, w, w / 2, "#ffff00", "LAST TIME DEPARTED", lastTime)
 
     };
 
