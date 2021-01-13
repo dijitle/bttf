@@ -1,4 +1,12 @@
 .App {
   text-align: center;
   background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  align-items: center;
+}
+
+#timeCircuits {
+  background-color: blue;
 }
