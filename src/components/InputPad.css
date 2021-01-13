@@ -1,0 +1,6 @@
+button {
+  border-style: outset;
+}
+button:active {
+  border-style: inset;
+}
