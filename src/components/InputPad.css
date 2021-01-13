@@ -1,5 +1,7 @@
 button {
   border-style: outset;
+  text-align: center;
+  vertical-align: middle;
 }
 button:active {
   border-style: inset;
