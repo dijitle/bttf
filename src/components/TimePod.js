@@ -1,6 +1,34 @@
 import { draw7SegmentDisplay, draw16SegmentDisplay } from "./SegmentDisplay";
 
 export function drawTimePod(ctx, width, y, color, name, value) {
+  let months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+
+  let output = "             ";
+
+  if (typeof value == "string") {
+    output = value;
+  } else {
+    output =
+      months[value.getMonth()] +
+      value.getDate().toString().padStart(2, "0") +
+      value.getFullYear().toString() +
+      value.getHours().toString().padStart(2, "0") +
+      value.getMinutes().toString().padStart(2, "0");
+  }
+
   let segThick = width * 0.01;
   let segGap = width * 0.001;
   let segWidth = width * 0.047;
@@ -138,7 +166,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     0,
     2 * Math.PI
   );
-  ctx.globalAlpha = value.getSeconds() % 2 === 0 ? 1 : 0.4;
+  ctx.globalAlpha = new Date().getSeconds() % 2 === 0 ? 1 : 0.4;
   ctx.fill();
   ctx.globalAlpha = 1;
 
@@ -184,21 +212,6 @@ export function drawTimePod(ctx, width, y, color, name, value) {
 
   ctx.fillStyle = color;
 
-  let months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUN",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "NOV",
-    "DEC",
-  ];
-
   draw16SegmentDisplay(
     ctx,
     segSeparation,
@@ -207,7 +220,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    months[value.getMonth()][0]
+    output[0]
   );
   draw16SegmentDisplay(
     ctx,
@@ -217,7 +230,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    months[value.getMonth()][1]
+    output[1]
   );
   draw16SegmentDisplay(
     ctx,
@@ -227,7 +240,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    months[value.getMonth()][2]
+    output[2]
   );
 
   draw7SegmentDisplay(
@@ -238,7 +251,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getDate().toString().padStart(2, "0")[0]
+    output[3]
   );
   draw7SegmentDisplay(
     ctx,
@@ -248,7 +261,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getDate().toString().padStart(2, "0")[1]
+    output[4]
   );
 
   draw7SegmentDisplay(
@@ -259,7 +272,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getFullYear().toString()[0]
+    output[5]
   );
   draw7SegmentDisplay(
     ctx,
@@ -269,7 +282,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getFullYear().toString()[1]
+    output[6]
   );
   draw7SegmentDisplay(
     ctx,
@@ -279,7 +292,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getFullYear().toString()[2]
+    output[7]
   );
   draw7SegmentDisplay(
     ctx,
@@ -289,7 +302,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getFullYear().toString()[3]
+    output[8]
   );
 
   draw7SegmentDisplay(
@@ -300,7 +313,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getHours().toString().padStart(2, "0")[0]
+    output[9]
   );
   draw7SegmentDisplay(
     ctx,
@@ -310,7 +323,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getHours().toString().padStart(2, "0")[1]
+    output[10]
   );
 
   draw7SegmentDisplay(
@@ -321,7 +334,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getMinutes().toString().padStart(2, "0")[0]
+    output[11]
   );
   draw7SegmentDisplay(
     ctx,
@@ -331,7 +344,7 @@ export function drawTimePod(ctx, width, y, color, name, value) {
     segHeight,
     segThick,
     segGap,
-    value.getMinutes().toString().padStart(2, "0")[1]
+    output[12]
   );
 
   ctx.resetTransform();

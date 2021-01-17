@@ -63,7 +63,7 @@ export function draw7SegmentDisplay(ctx, x, y, w, h, t, g, value) {
   drawHorizontalLine(ctx, left, middle, right, middle, t, g);
 
   //bottom
-  ctx.globalAlpha = "023568".includes(value) ? 1 : dim;
+  ctx.globalAlpha = "023568_".includes(value) ? 1 : dim;
   drawHorizontalLine(ctx, left, bottom, right, bottom, t, g);
 
   //rightTop
@@ -129,11 +129,13 @@ export function draw16SegmentDisplay(ctx, x, y, w, h, t, g, value) {
   drawHorizontalLine(ctx, center, middle, right, middle, t, g);
 
   //bottom left
-  ctx.globalAlpha = "035689BCDEGIJLOQSUYZabcegjostuz".includes(value) ? 1 : dim;
+  ctx.globalAlpha = "035689BCDEGIJLOQSUYZabcegjostuz_".includes(value)
+    ? 1
+    : dim;
   drawHorizontalLine(ctx, left, bottom, center, bottom, t, g);
 
   //bottom right
-  ctx.globalAlpha = "0235689BCDEGIJLOQSUYZady".includes(value) ? 1 : dim;
+  ctx.globalAlpha = "0235689BCDEGIJLOQSUYZady_".includes(value) ? 1 : dim;
   drawHorizontalLine(ctx, center, bottom, right, bottom, t, g);
 
   //rightTop

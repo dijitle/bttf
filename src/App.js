@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { drawTimePod } from "./components/TimePod";
 import InputPad from "./components/InputPad";
-import { Row } from "react-bootstrap";
 
 function App() {
   const [winSize, setWinSize] = useState({
@@ -15,6 +14,73 @@ function App() {
   );
   const [presentTime, setPresentTime] = useState(new Date());
   const [lastTime, setLastTime] = useState(new Date(1985, 9, 26, 1, 20));
+
+  const [inputTime, setInputTime] = useState(null);
+
+  const addNumberToInput = (num) => {
+    if (num === null) {
+      setInputTime(null);
+      return;
+    }
+
+    if (num === "input" && inputTime === null) {
+      setInputTime("M_");
+      return;
+    }
+
+    if (inputTime == null) {
+      return;
+    }
+
+    if (num === "clear") {
+      setInputTime("M_");
+      return;
+    }
+
+    if (num === "back") {
+      if (inputTime === "M_") {
+        return;
+      }
+    }
+
+    if (num === "enter") {
+      let d = new Date(
+        inputTime.substring(5, 9),
+        inputTime.substring(1, 3) - 1,
+        inputTime.substring(3, 5),
+        inputTime.substring(9, 11),
+        inputTime.substring(11, 13)
+      );
+      if (isNaN(d)) {
+        setInputTime("M_");
+        return;
+      } else {
+        setDestinationTime(d);
+        setInputTime(null);
+        return;
+      }
+    }
+    if (typeof num === "number") {
+      if (inputTime.length === 14) {
+        return;
+      }
+      let dateString = inputTime.slice(1, -1);
+      let l = dateString.length;
+      let prefix =
+        l < 1
+          ? "M"
+          : l < 3
+          ? "D"
+          : l < 7
+          ? "Y"
+          : l < 9
+          ? "H"
+          : l < 11
+          ? "m"
+          : "_";
+      setInputTime(prefix + dateString + num + "_");
+    }
+  };
 
   useEffect(() => {
     const handleResize = () =>
@@ -49,16 +115,37 @@ function App() {
 
       ctx.clearRect(0, 0, w, w);
 
-      drawTimePod(ctx, w, 0, "#ff0000", "DESTINATION TIME", destinationTime);
+      drawTimePod(
+        ctx,
+        w,
+        w - (w / 4.5) * 3.2,
+        "#ff0000",
+        "DESTINATION TIME",
+        inputTime == null ? destinationTime : inputTime
+      );
 
-      drawTimePod(ctx, w, w / 4, "#00ff00", "PRESENT TIME", presentTime);
+      drawTimePod(
+        ctx,
+        w,
+        w - (w / 4.5) * 2.1,
+        "#00ff00",
+        "PRESENT TIME",
+        presentTime
+      );
 
-      drawTimePod(ctx, w, w / 2, "#ffff00", "LAST TIME DEPARTED", lastTime);
+      drawTimePod(
+        ctx,
+        w,
+        w - w / 4.5,
+        "#ffff00",
+        "LAST TIME DEPARTED",
+        lastTime
+      );
     };
 
     let id = window.requestAnimationFrame(draw);
     return () => window.cancelAnimationFrame(id);
-  }, [winSize, destinationTime, presentTime, lastTime]);
+  }, [winSize, destinationTime, presentTime, lastTime, inputTime]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,6 +163,7 @@ function App() {
     >
       <canvas id="timeCircuits"></canvas>
       <InputPad
+        input={addNumberToInput}
         width={Math.min(
           Math.abs(winSize.h - winSize.w),
           Math.min(winSize.h, winSize.w)
